@@ -66,7 +66,7 @@ export const defaultOptions: Options = {
 };
 
 export const getDefaultOptions = <Target extends Targets>(
-  options: Partial<Options<Target>> | string | undefined
+  options: Options<Target> | string | undefined
 ) => {
   if (options === undefined) {
     return defaultOptions;

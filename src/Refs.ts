@@ -14,7 +14,7 @@ export type Seen = {
   jsonSchema: JsonSchema7Type | undefined;
 };
 
-export const getRefs = (options?: string | Partial<Options<Targets>>): Refs => {
+export const getRefs = (options?: string | Options<Targets>): Refs => {
   const _options = getDefaultOptions(options);
   const currentPath =
     _options.name !== undefined

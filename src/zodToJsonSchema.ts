@@ -5,7 +5,7 @@ import { getRefs } from './Refs.js';
 
 const zodToJsonSchema = <Target extends Targets = SchemaTargets.JSON_SCHEMA_7>(
   schema: ZodSchema<any>,
-  options?: Partial<Options<Target>> | string
+  options?: Options<Target> | string
 ): (Target extends SchemaTargets.JSON_SCHEMA_7 ? JsonSchema7Type : object) & {
   $schema?: string;
   definitions?: {
