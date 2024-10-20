@@ -2,6 +2,7 @@ import { ZodSchema } from 'zod';
 import { Options, SchemaTargets, Targets } from './Options.js';
 import { JsonSchema7Type, parseDef } from './parseDef.js';
 import { getRefs } from './Refs.js';
+import { JsonSchema7ObjectType } from './parsers/object.js';
 
 const zodToJsonSchema = <Target extends Targets = SchemaTargets.JSON_SCHEMA_7>(
   schema: ZodSchema<any>,
@@ -95,7 +96,22 @@ const zodToJsonSchema = <Target extends Targets = SchemaTargets.JSON_SCHEMA_7>(
       combined.$schema = 'https://json-schema.org/draft/2019-09/schema#';
       break;
     case SchemaTargets.MONGODB:
-      delete combined.$schema;
+      const mongoSchema = combined as JsonSchema7ObjectType;
+
+      // $schema is not supported in MongoDB
+      // @ts-expect-error $schema is not supported in MongoDB
+      delete mongoSchema.$schema;
+      // check if additionalProperties is set to false
+      // and if there is no definition for _id
+      // then add _id to the properties
+      const properties = mongoSchema?.properties;
+      if (properties && mongoSchema.additionalProperties === false && !properties._id) {
+        mongoSchema.properties._id = {
+          // @ts-ignore todo: add support for bsonTypes
+          anyOf: [{ bsonType: 'objectId' }, { type: 'string' }],
+        };
+      }
+
     default:
       break;
   }
