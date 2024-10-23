@@ -31,6 +31,7 @@ export function parseNumberDef(def: ZodNumberDef, refs: Refs): JsonSchema7Number
         switch (refs.target) {
           case SchemaTargets.MONGODB:
             res.bsonType = 'int';
+            delete res.type;
             break;
           default:
             res.type = 'integer';
